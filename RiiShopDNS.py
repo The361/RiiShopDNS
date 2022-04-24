@@ -1,4 +1,4 @@
-# sudomemoDNS
+# RiiShopDNS
 
 from datetime import datetime
 from json import loads
@@ -27,7 +27,7 @@ def get_platform():
     return platforms[platform]
 
 
-SUDOMEMODNS_VERSION = "1.2.1"
+RIISHOP_VERSION = "1.2.1"
 
 
 # Adds preceding zeros to IP addresses
@@ -55,13 +55,13 @@ SERIAL = int((datetime.utcnow() - EPOCH).total_seconds())
 MY_IP = get_ip()
 
 print("+===============================+")
-print("|      Sudomemo DNS Server      |")
-print(f"|         Version {SUDOMEMODNS_VERSION}         |")
+print("|      RiiShop DNS Server       |")
+print(f"|         Version {RIISHOP_VERSION}         |")
 print("+===============================+\n")
 
-print("== Welcome to sudomemoDNS! ==")
+print("== Welcome to RiiShopDNS! ==")
 print(
-    "This server will allow you to connect to Sudomemo when your Internet Service Provider does not work with custom DNS.\n")
+    "This server will allow you to connect to RiiShop when your Internet Service Provider does not work with custom DNS.\n")
 
 print("== How To Use ==")
 print("First, make sure that your console is connected to the same network as this computer.\n")
@@ -73,9 +73,9 @@ print("Secondary DNS: 008.008.008.008")
 print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
 
 print("== Getting Help ==")
-print("Need help? Visit our Discord server or check out https://support.sudomemo.net\n")
+print("Need help? Visit our Discord server\n")
 
-print("[INFO] Starting sudomemoDNS...")
+print("[INFO] Starting RiiShopDNS...")
 
 TYPE_LOOKUP = {
     A: QTYPE.A,
@@ -165,18 +165,9 @@ class Record:
 ZONES = {}
 
 try:
-    get_zones = get("https://www.sudomemo.net/api/dns_zones.json",
-                    headers={'User-Agent': 'SudomemoDNS/' + SUDOMEMODNS_VERSION + ' (' + get_platform() + ')'})
-except Timeout:
-    print("[ERROR] Unable to load DNS data: Connection to Sudomemo timed out. Are you connected to the Internet?")
-except RequestException as e:
-    print("[ERROR] Unable load DNS data.")
-    print("[ERROR] Exception: ", e)
-    exit(1)
-try:
-    zones = loads(get_zones.text)
+    zones = loads('[{"type":"a","name":"oss-auth.shop.wii.com","value":' + format_ip(MY_IP) + '}]')
 except ValueError as e:
-    print("[ERROR] Unable load DNS data: Invalid response from server. Check that you can visit sudomemo.net")
+    print("[ERROR] Unable load DNS data: Invalid DNS Zones.")
 
 for zone in zones:
     if zone["type"] == "a":
@@ -243,7 +234,7 @@ except PermissionError:
     print("[ERROR] Permission error: Check that you are running this as an administrator or root")
     exit(1)
 
-print("[INFO] sudomemoDNS is ready. Now waiting for DNS requests from your console...")
+print("[INFO] RiiShopDNS is ready. Now waiting for DNS requests from your console...")
 
 if __name__ == '__main__':
     for s in servers:
